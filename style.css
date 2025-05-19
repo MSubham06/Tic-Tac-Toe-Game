@@ -1,29 +1,35 @@
 :root {
-    --bg-color: #f2f2f2;
-    --text-color: #333;
-    --cell-bg: #fff;
-    --cell-border: #000;
-    --nav-bg: #333;
-    --nav-text: #fff;
-    --score-x: #ff4757;
-    --score-o: #2ed573;
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --cell-bg: #ffffff;
+    --cell-border: #dee2e6;
+    --nav-bg: #343a40;
+    --nav-text: #f8f9fa;
+    --x-color: #dc3545;
+    --o-color: #28a745;
     --board-bg: transparent;
+    --border-color: #adb5bd;
+    --turn-indicator: #6c757d;
+    --input-bg: #e9ecef;
   }
   
   .dark-mode {
-    --bg-color: #121212;
-    --text-color: #f2f2f2;
-    --cell-bg: #1e1e1e;
-    --cell-border: #555;
-    --nav-bg: #1e1e1e;
-    --nav-text: #f2f2f2;
-    --score-x: #ff6b81;
-    --score-o: #7bed9f;
+    --bg-color: #212529;
+    --text-color: #f8f9fa;
+    --cell-bg: #343a40;
+    --cell-border: #495057;
+    --nav-bg: #121416;
+    --nav-text: #f8f9fa;
+    --x-color: #ff6b6b;
+    --o-color: #51cf66;
     --board-bg: transparent;
+    --border-color: #495057;
+    --turn-indicator: #adb5bd;
+    --input-bg: #343a40;
   }
   
   body {
-    font-family: 'Montserrat', Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     background: var(--bg-color);
     color: var(--text-color);
@@ -67,7 +73,7 @@
     padding: 8px 15px;
     border: none;
     border-radius: 5px;
-    background-color: #555;
+    background-color: #495057;
     color: white;
     cursor: pointer;
     font-size: 0.9rem;
@@ -80,36 +86,131 @@
   }
   
   .sound-btn.on {
-    background-color: #4CAF50;
+    background-color: #28a745;
   }
   
   .ai-btn {
-    background-color: #3498db;
+    background-color: #007bff;
+  }
+  
+  .ai-btn.on {
+    background-color: #17a2b8;
   }
   
   .support-btn {
-    background-color: #e84393;
+    background-color: #e83e8c;
     text-decoration: none;
     display: inline-block;
   }
   
+  /* Player input styles */
+  .player-input {
+    background-color: var(--input-bg);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .player-input h2 {
+    margin-top: 0;
+    color: var(--text-color);
+  }
+  
+  .input-group {
+    margin: 15px 0;
+    text-align: left;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--cell-border);
+    background-color: var(--cell-bg);
+    color: var(--text-color);
+  }
+  
+  #start-game {
+    background-color: #28a745;
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  
+  /* Scoreboard styles */
   .scoreboard {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 30px;
     margin: 20px 0;
     font-size: 1.2rem;
     font-weight: bold;
   }
   
+  .score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    min-width: 120px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
   .x-score {
-    color: var(--score-x);
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 2px solid var(--x-color);
+    color: var(--x-color);
   }
   
   .o-score {
-    color: var(--score-o);
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 2px solid var(--o-color);
+    color: var(--o-color);
   }
   
+  .dark-mode .x-score {
+    background-color: rgba(255, 107, 107, 0.1);
+  }
+  
+  .dark-mode .o-score {
+    background-color: rgba(81, 207, 102, 0.1);
+  }
+  
+  .vs {
+    font-size: 1.5rem;
+    color: var(--turn-indicator);
+  }
+  
+  .player-name {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  .score-count {
+    font-size: 1.8rem;
+  }
+  
+  .turn-indicator {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: var(--turn-indicator);
+    color: white;
+  }
+  
+  /* Board styles */
   .board-container {
     position: relative;
     width: 312px;
@@ -121,6 +222,42 @@
     grid-template-columns: repeat(3, 100px);
     grid-gap: 6px;
     background: var(--board-bg);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .board-border {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 3px solid var(--border-color);
+    border-radius: 5px;
+    z-index: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .board-border.x-turn {
+    animation: x-pulse 1.5s infinite;
+    border-color: var(--x-color);
+  }
+  
+  .board-border.o-turn {
+    animation: o-pulse 1.5s infinite;
+    border-color: var(--o-color);
+  }
+  
+  @keyframes x-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+  }
+  
+  @keyframes o-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
   }
   
   .cell {
@@ -136,11 +273,21 @@
     font-weight: bold;
     transition: all 0.3s ease;
     color: var(--text-color);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cell.x-move {
+    color: var(--x-color);
+  }
+  
+  .cell.o-move {
+    color: var(--o-color);
   }
   
   .cell:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   }
   
   .line {
@@ -153,12 +300,34 @@
     transform-origin: center center;
     display: none;
     transition: all 0.3s ease;
+    z-index: 2;
   }
   
   #status {
     font-size: 1.2rem;
     margin: 20px 0;
     min-height: 24px;
+  }
+  
+  /* Win animation */
+  .win-animation {
+    animation: win-glow 0.4s;
+  }
+  
+  @keyframes win-glow {
+    0% { box-shadow: 0 0 5px 0px var(--x-color); }
+    50% { box-shadow: 0 0 20px 10px var(--x-color); }
+    100% { box-shadow: 0 0 5px 0px var(--x-color); }
+  }
+  
+  .draw-animation {
+    animation: draw-glow 1s;
+  }
+  
+  @keyframes draw-glow {
+    0% { box-shadow: 0 0 5px 0px var(--x-color), 0 0 5px 0px var(--o-color); }
+    50% { box-shadow: 0 0 20px 10px var(--x-color), 0 0 20px 10px var(--o-color); }
+    100% { box-shadow: 0 0 5px 0px var(--x-color), 0 0 5px 0px var(--o-color); }
   }
   
   /* Theme toggle styles */
@@ -235,5 +404,14 @@
     
     .line {
       width: 240px;
+    }
+    
+    .scoreboard {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .vs {
+      display: none;
     }
   }
