@@ -1,11 +1,113 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #f2f2f2;
+:root {
+    --bg-color: #f2f2f2;
+    --text-color: #333;
+    --cell-bg: #fff;
+    --cell-border: #000;
+    --nav-bg: #333;
+    --nav-text: #fff;
+    --score-x: #ff4757;
+    --score-o: #2ed573;
+    --board-bg: transparent;
   }
   
-  h1 {
-    margin-top: 30px;
+  .dark-mode {
+    --bg-color: #121212;
+    --text-color: #f2f2f2;
+    --cell-bg: #1e1e1e;
+    --cell-border: #555;
+    --nav-bg: #1e1e1e;
+    --nav-text: #f2f2f2;
+    --score-x: #ff6b81;
+    --score-o: #7bed9f;
+    --board-bg: transparent;
+  }
+  
+  body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    text-align: center;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--nav-bg);
+    color: var(--nav-text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-left {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .theme-toggle {
+    margin-left: 10px;
+  }
+  
+  button, .support-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover, .support-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+  
+  .sound-btn.on {
+    background-color: #4CAF50;
+  }
+  
+  .ai-btn {
+    background-color: #3498db;
+  }
+  
+  .support-btn {
+    background-color: #e84393;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .x-score {
+    color: var(--score-x);
+  }
+  
+  .o-score {
+    color: var(--score-o);
   }
   
   .board-container {
@@ -18,19 +120,27 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-gap: 6px;
+    background: var(--board-bg);
   }
   
   .cell {
     width: 100px;
     height: 100px;
-    background-color: #fff;
-    border: 2px solid #000;
+    background-color: var(--cell-bg);
+    border: 2px solid var(--cell-border);
     font-size: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+  }
+  
+  .cell:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
   
   .line {
@@ -45,9 +155,85 @@ body {
     transition: all 0.3s ease;
   }
   
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+  #status {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    min-height: 24px;
   }
   
+  /* Theme toggle styles */
+  .checkbox {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .checkbox-label {
+    background-color: #111;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .fa-moon {
+    color: #f1c40f;
+  }
+  
+  .fa-sun {
+    color: #f39c12;
+  }
+  
+  .checkbox-label .ball {
+    background-color: #fff;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+  }
+  
+  .checkbox:checked + .checkbox-label .ball {
+    transform: translateX(24px);
+  }
+  
+  /* Mobile optimization */
+  @media (max-width: 600px) {
+    .navbar {
+      flex-direction: column;
+      padding: 10px;
+    }
+    
+    .nav-left {
+      margin-bottom: 10px;
+    }
+    
+    .nav-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .board {
+      grid-template-columns: repeat(3, 80px);
+    }
+    
+    .cell {
+      width: 80px;
+      height: 80px;
+      font-size: 36px;
+    }
+    
+    .board-container {
+      width: 252px;
+    }
+    
+    .line {
+      width: 240px;
+    }
+  }
