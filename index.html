@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="dark">
   <nav class="navbar">
-    <div class="nav-left">XO Tic Tac Toe</div>
+    <div class="nav-left" style="color: rgb(255, 255, 255); font-family: Medieval Bold;">XO Tic Tac Toe</div>
     <div class="nav-right">
       <a href="https://www.linkedin.com/in/msubham/" class="support-btn" target="_blank">
         <i class="fas fa-heart"></i> Support
@@ -20,27 +20,28 @@
       <button class="sound-btn on" id="sound-btn">
         <i class="fas fa-volume-up"></i> Sound
       </button>
-      <div class="theme-toggle">
-        <input type="checkbox" class="checkbox" id="checkbox" checked>
-        <label for="checkbox" class="checkbox-label">
+      
+      <!-- Updated Theme Switch -->
+      <div class="theme-switch-container">
+        <input type="checkbox" id="themeSwitch" name="theme-switch" class="theme-switch__input" />
+        <label for="themeSwitch" class="theme-switch__label">
           <i class="fas fa-moon"></i>
           <i class="fas fa-sun"></i>
-          <span class="ball"></span>
         </label>
       </div>
     </div>
   </nav>
-
+  <!-- Developed by https://www.linkedin.com/in/msubham/ -->
   <div class="container">
     <div class="player-input" id="player-input">
       <h2>Enter Player Names</h2>
       <div class="input-group">
         <label for="player-x">Player X:</label>
-        <input type="text" id="player-x" placeholder="Enter X player name" value="Player X">
+        <input type="text" id="player-x" placeholder="Enter X player name" >
       </div>
       <div class="input-group">
         <label for="player-o">Player O:</label>
-        <input type="text" id="player-o" placeholder="Enter O player name" value="Player O">
+        <input type="text" id="player-o" placeholder="Enter O player name" >
       </div>
       <button id="start-game">Start Game</button>
     </div>
@@ -57,11 +58,7 @@
           <span class="score-count">0</span>
         </div>
       </div>
-      
-      <div class="turn-indicator" id="turn-indicator">
-        <span id="current-turn">Player X's turn</span>
-      </div>
-      
+      <br>
       <div class="board-container" id="board-container">
         <div class="board" id="board">
           <div class="cell" data-index="0"></div>
@@ -75,12 +72,23 @@
           <div class="cell" data-index="8"></div>
         </div>
         <div class="board-border"></div>
-        <div class="line" id="winning-line"></div>
+        <div class="winning-cells" id="winning-cells"></div>
       </div>
       <p id="status"></p>
-      <button onclick="restartGame()">Restart</button>
+      <button id="restart-btn">Restart</button>
     </div>
   </div>
+  <!-- Developed by https://www.linkedin.com/in/msubham/ -->
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Developed by Subham</p>
+      <a href="https://github.com/MSubham06" class="github-btn" target="_blank">
+        <i class="fab fa-github"></i> Follow for more projects
+      </a>
+      <p class="copyright">© 2025 All rights reserved</p>
+    </div>
+  </footer>
 
   <!-- Audio files -->
   <audio id="clickSound" src="click.mp3"></audio>
@@ -90,3 +98,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+<!-- Developed by https://www.linkedin.com/in/msubham/ -->
