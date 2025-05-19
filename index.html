@@ -1,180 +1,92 @@
-const cells = document.querySelectorAll(".cell");
-const statusText = document.getElementById("status");
-const winningLine = document.getElementById("winning-line");
-const xScoreDisplay = document.querySelector(".x-score");
-const oScoreDisplay = document.querySelector(".o-score");
-const soundBtn = document.getElementById("sound-btn");
-const aiBtn = document.getElementById("ai-btn");
-const themeToggle = document.getElementById("checkbox");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XO Tic Tac Toe</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">XO Tic Tac Toe</div>
+    <div class="nav-right">
+      <a href="https://www.linkedin.com/in/msubham/" class="support-btn" target="_blank">
+        <i class="fas fa-heart"></i> Support
+      </a>
+      <button class="ai-btn" id="ai-btn">
+        <i class="fas fa-robot"></i> AI Mode
+      </button>
+      <button class="sound-btn on" id="sound-btn">
+        <i class="fas fa-volume-up"></i> Sound
+      </button>
+      <div class="theme-toggle">
+        <input type="checkbox" class="checkbox" id="checkbox" checked>
+        <label for="checkbox" class="checkbox-label">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+          <span class="ball"></span>
+        </label>
+      </div>
+    </div>
+  </nav>
 
-const clickSound = document.getElementById("clickSound");
-const winSound = document.getElementById("winSound");
-const drawSound = document.getElementById("drawSound");
+  <div class="container">
+    <div class="player-input" id="player-input">
+      <h2>Enter Player Names</h2>
+      <div class="input-group">
+        <label for="player-x">Player X:</label>
+        <input type="text" id="player-x" placeholder="Enter X player name" value="Player X">
+      </div>
+      <div class="input-group">
+        <label for="player-o">Player O:</label>
+        <input type="text" id="player-o" placeholder="Enter O player name" value="Player O">
+      </div>
+      <button id="start-game">Start Game</button>
+    </div>
 
-let currentPlayer = "X";
-let board = ["", "", "", "", "", "", "", "", ""];
-let gameActive = true;
-let scores = { X: 0, O: 0 };
-let soundOn = true;
-let aiMode = false;
+    <div class="game-area" id="game-area" style="display: none;">
+      <div class="scoreboard">
+        <div class="score x-score">
+          <span class="player-name" id="x-name">Player X</span>
+          <span class="score-count">0</span>
+        </div>
+        <div class="vs">VS</div>
+        <div class="score o-score">
+          <span class="player-name" id="o-name">Player O</span>
+          <span class="score-count">0</span>
+        </div>
+      </div>
+      
+      <div class="turn-indicator" id="turn-indicator">
+        <span id="current-turn">Player X's turn</span>
+      </div>
+      
+      <div class="board-container" id="board-container">
+        <div class="board" id="board">
+          <div class="cell" data-index="0"></div>
+          <div class="cell" data-index="1"></div>
+          <div class="cell" data-index="2"></div>
+          <div class="cell" data-index="3"></div>
+          <div class="cell" data-index="4"></div>
+          <div class="cell" data-index="5"></div>
+          <div class="cell" data-index="6"></div>
+          <div class="cell" data-index="7"></div>
+          <div class="cell" data-index="8"></div>
+        </div>
+        <div class="board-border"></div>
+        <div class="line" id="winning-line"></div>
+      </div>
+      <p id="status"></p>
+      <button onclick="restartGame()">Restart</button>
+    </div>
+  </div>
 
-const winConditions = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-  [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-  [0, 4, 8], [2, 4, 6]             // Diagonals
-];
+  <!-- Audio files -->
+  <audio id="clickSound" src="click.mp3"></audio>
+  <audio id="winSound" src="win.mp3"></audio>
+  <audio id="drawSound" src="draw.mp3"></audio>
 
-const lineTransforms = {
-  "0,1,2": { rotate: "0deg", top: "50px", left: "6px" },
-  "3,4,5": { rotate: "0deg", top: "156px", left: "6px" },
-  "6,7,8": { rotate: "0deg", top: "262px", left: "6px" },
-  "0,3,6": { rotate: "90deg", top: "158px", left: "-102px" },
-  "1,4,7": { rotate: "90deg", top: "158px", left: "4px" },
-  "2,5,8": { rotate: "90deg", top: "158px", left: "110px" },
-  "0,4,8": { rotate: "45deg", top: "158px", left: "6px" },
-  "2,4,6": { rotate: "-45deg", top: "158px", left: "6px" }
-};
-
-// Initialize the game
-function init() {
-  updateScores();
-  cells.forEach(cell => cell.addEventListener("click", handleClick));
-  themeToggle.addEventListener("change", toggleTheme);
-  soundBtn.addEventListener("click", toggleSound);
-  aiBtn.addEventListener("click", toggleAI);
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("dark-mode");
-}
-
-function toggleSound() {
-  soundOn = !soundOn;
-  soundBtn.classList.toggle("on");
-  soundBtn.innerHTML = soundOn ? '<i class="fas fa-volume-up"></i> Sound' : '<i class="fas fa-volume-mute"></i> Sound';
-}
-
-function toggleAI() {
-  aiMode = !aiMode;
-  aiBtn.classList.toggle("on");
-  aiBtn.innerHTML = aiMode ? '<i class="fas fa-robot"></i> AI On' : '<i class="fas fa-robot"></i> AI Off';
-  restartGame();
-}
-
-function playSound(sound) {
-  if (soundOn) {
-    sound.currentTime = 0;
-    sound.play();
-  }
-}
-
-function updateScores() {
-  xScoreDisplay.textContent = `X: ${scores.X}`;
-  oScoreDisplay.textContent = `O: ${scores.O}`;
-}
-
-function drawLine(condition) {
-  const key = condition.join(",");
-  const transform = lineTransforms[key];
-  if (transform) {
-    winningLine.style.display = "block";
-    winningLine.style.top = transform.top;
-    winningLine.style.left = transform.left;
-    winningLine.style.transform = `rotate(${transform.rotate})`;
-  }
-}
-
-function handleClick() {
-  const index = this.dataset.index;
-  if (board[index] !== "" || !gameActive) return;
-
-  playSound(clickSound);
-
-  board[index] = currentPlayer;
-  this.textContent = currentPlayer;
-  this.classList.add(currentPlayer === "X" ? "x-move" : "o-move");
-
-  if (checkWin()) {
-    statusText.textContent = `Player ${currentPlayer} wins!`;
-    scores[currentPlayer]++;
-    updateScores();
-    gameActive = false;
-    playSound(winSound);
-    return;
-  }
-
-  if (board.every(cell => cell !== "")) {
-    statusText.textContent = "It's a draw!";
-    gameActive = false;
-    playSound(drawSound);
-    return;
-  }
-
-  currentPlayer = currentPlayer === "X" ? "O" : "X";
-  
-  if (aiMode && currentPlayer === "O") {
-    setTimeout(makeAIMove, 500);
-  }
-}
-
-function makeAIMove() {
-  if (!gameActive) return;
-  
-  // Simple AI - random move
-  const emptyCells = board.map((cell, index) => cell === "" ? index : null).filter(val => val !== null);
-  if (emptyCells.length > 0) {
-    const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    board[randomIndex] = "O";
-    cells[randomIndex].textContent = "O";
-    cells[randomIndex].classList.add("o-move");
-    playSound(clickSound);
-    
-    if (checkWin()) {
-      statusText.textContent = "Player O wins!";
-      scores.O++;
-      updateScores();
-      gameActive = false;
-      playSound(winSound);
-      return;
-    }
-    
-    if (board.every(cell => cell !== "")) {
-      statusText.textContent = "It's a draw!";
-      gameActive = false;
-      playSound(drawSound);
-      return;
-    }
-    
-    currentPlayer = "X";
-  }
-}
-
-function checkWin() {
-  for (const condition of winConditions) {
-    const [a, b, c] = condition;
-    if (board[a] && board[a] === board[b] && board[b] === board[c]) {
-      drawLine(condition);
-      return true;
-    }
-  }
-  return false;
-}
-
-function restartGame() {
-  board = ["", "", "", "", "", "", "", "", ""];
-  gameActive = true;
-  currentPlayer = "X";
-  cells.forEach(cell => {
-    cell.textContent = "";
-    cell.classList.remove("x-move", "o-move");
-  });
-  statusText.textContent = "";
-  winningLine.style.display = "none";
-  
-  if (aiMode && currentPlayer === "O") {
-    setTimeout(makeAIMove, 500);
-  }
-}
-
-// Initialize the game when DOM is loaded
-document.addEventListener("DOMContentLoaded", init);
+  <script src="script.js"></script>
+</body>
+</html>
