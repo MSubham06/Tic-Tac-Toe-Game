@@ -1,4 +1,21 @@
 :root {
+    --bg-color: #121212;
+    --text-color: #f8f9fa;
+    --cell-bg: #1e1e1e;
+    --cell-border: #555;
+    --nav-bg: #121416;
+    --nav-text: #f8f9fa;
+    --x-color: #ff6b6b;
+    --o-color: #51cf66;
+    --board-bg: transparent;
+    --border-color: #495057;
+    --input-bg: #343a40;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --gradDark: hsl(198, 44%, 11%);
+    --gradLight: hsl(198, 39%, 29%);
+  }
+  
+  .light-mode {
     --bg-color: #f8f9fa;
     --text-color: #212529;
     --cell-bg: #ffffff;
@@ -9,23 +26,10 @@
     --o-color: #28a745;
     --board-bg: transparent;
     --border-color: #adb5bd;
-    --turn-indicator: #6c757d;
     --input-bg: #e9ecef;
-  }
-  
-  .dark-mode {
-    --bg-color: #212529;
-    --text-color: #f8f9fa;
-    --cell-bg: #343a40;
-    --cell-border: #495057;
-    --nav-bg: #121416;
-    --nav-text: #f8f9fa;
-    --x-color: #ff6b6b;
-    --o-color: #51cf66;
-    --board-bg: transparent;
-    --border-color: #495057;
-    --turn-indicator: #adb5bd;
-    --input-bg: #343a40;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --gradDark: hsl(144, 100%, 89%);
+    --gradLight: hsl(42, 94%, 76%);
   }
   
   body {
@@ -36,12 +40,16 @@
     margin: 0;
     padding: 0;
     transition: all 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   
   .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    flex: 1;
   }
   
   .navbar {
@@ -51,22 +59,21 @@
     padding: 15px 20px;
     background-color: var(--nav-bg);
     color: var(--nav-text);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    position: relative;
+    z-index: 10;
   }
   
   .nav-left {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
+    text-shadow: 1px 1px 2px var(--shadow-color);
   }
   
   .nav-right {
     display: flex;
     align-items: center;
     gap: 15px;
-  }
-  
-  .theme-toggle {
-    margin-left: 10px;
   }
   
   button, .support-btn {
@@ -78,11 +85,12 @@
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px var(--shadow-color);
   }
   
   button:hover, .support-btn:hover {
-    opacity: 0.9;
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
   }
   
   .sound-btn.on {
@@ -98,9 +106,57 @@
   }
   
   .support-btn {
-    background-color: #e83e8c;
+    background-color: #ff0000;
     text-decoration: none;
     display: inline-block;
+  }
+  
+  /* Developed by https://www.linkedin.com/in/msubham/ */
+  /* Theme Switch Styles */
+  .theme-switch-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .theme-switch__input {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .theme-switch__label {
+    width: 51px;
+    height: 26px;
+    background-color: #495057;
+    border-radius: 50px;
+    position: relative;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+  }
+  
+  .theme-switch__label i {
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    z-index: 1;
+  }
+  
+  .theme-switch__label::after {
+    content: '';
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    top: px;
+    left: px;
+    transition: transform 0.3s ease;
+  }
+  
+  .theme-switch__input:checked + .theme-switch__label::after {
+    transform: translateX(24px);
   }
   
   /* Player input styles */
@@ -108,17 +164,19 @@
     background-color: var(--input-bg);
     padding: 20px;
     border-radius: 10px;
-    max-width: 400px;
+    max-width: 300px;
     margin: 20px auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px var(--shadow-color);
   }
   
   .player-input h2 {
     margin-top: 0;
     color: var(--text-color);
+    text-shadow: 1px 1px 2px var(--shadow-color);
   }
-  
+    /* Developed by https://www.linkedin.com/in/msubham/ */
   .input-group {
+    padding-right: 20px;
     margin: 15px 0;
     text-align: left;
   }
@@ -126,6 +184,7 @@
   .input-group label {
     display: block;
     margin-bottom: 5px;
+    margin-right: 20px;
     font-weight: bold;
   }
   
@@ -136,6 +195,7 @@
     border: 1px solid var(--cell-border);
     background-color: var(--cell-bg);
     color: var(--text-color);
+    box-shadow: inset 0 1px 3px var(--shadow-color);
   }
   
   #start-game {
@@ -155,41 +215,43 @@
     margin: 20px 0;
     font-size: 1.2rem;
     font-weight: bold;
+    text-shadow: 1px 1px 2px var(--shadow-color);
   }
   
   .score {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px 30px;
     border-radius: 8px;
-    min-width: 120px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
   }
-  
+    /* Developed by https://www.linkedin.com/in/msubham/ */
   .x-score {
-    background-color: rgba(220, 53, 69, 0.1);
+    background-color: rgba(255, 107, 107, 0.1);
     border: 2px solid var(--x-color);
     color: var(--x-color);
-  }
+ }
   
   .o-score {
-    background-color: rgba(40, 167, 69, 0.1);
+    background-color: rgba(81, 207, 102, 0.1);
     border: 2px solid var(--o-color);
     color: var(--o-color);
   }
   
-  .dark-mode .x-score {
-    background-color: rgba(255, 107, 107, 0.1);
+  .light-mode .x-score {
+    background-color: rgba(220, 53, 69, 0.1);
   }
   
-  .dark-mode .o-score {
-    background-color: rgba(81, 207, 102, 0.1);
+  .light-mode .o-score {
+    background-color: rgba(40, 167, 69, 0.1);
   }
   
   .vs {
     font-size: 1.5rem;
-    color: var(--turn-indicator);
+    color: var(--text-color);
+    text-shadow: 1px 1px 2px var(--shadow-color);
   }
   
   .player-name {
@@ -201,22 +263,15 @@
     font-size: 1.8rem;
   }
   
-  .turn-indicator {
-    margin: 15px 0;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    background-color: var(--turn-indicator);
-    color: white;
-  }
-  
   /* Board styles */
   .board-container {
     position: relative;
     width: 312px;
     margin: 20px auto;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    border-radius: 10px;
   }
-  
+    /* Developed by https://www.linkedin.com/in/msubham/ */
   .board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
@@ -224,6 +279,8 @@
     background: var(--board-bg);
     position: relative;
     z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
   }
   
   .board-border {
@@ -233,7 +290,7 @@
     right: -10px;
     bottom: -10px;
     border: 3px solid var(--border-color);
-    border-radius: 5px;
+    border-radius: 12px;
     z-index: 0;
     transition: all 0.3s ease;
   }
@@ -249,15 +306,15 @@
   }
   
   @keyframes x-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 107, 107, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
   }
-  
+    /* Developed by https://www.linkedin.com/in/msubham/ */
   @keyframes o-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(81, 207, 102, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(81, 207, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(81, 207, 102, 0); }
   }
   
   .cell {
@@ -287,26 +344,52 @@
   
   .cell:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px var(--shadow-color);
   }
   
-  .line {
+  .winning-cells {
     position: absolute;
-    height: 4px;
-    background: red;
-    width: 300px;
     top: 0;
     left: 0;
-    transform-origin: center center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
     display: none;
-    transition: all 0.3s ease;
-    z-index: 2;
+  }
+    /* Developed by https://www.linkedin.com/in/msubham/ */
+  .winning-cell {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    animation: blink 0.5s infinite alternate;
+  }
+  
+  @keyframes blink {
+    from { opacity: 0.3; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.1); }
   }
   
   #status {
     font-size: 1.2rem;
     margin: 20px 0;
     min-height: 24px;
+    text-shadow: 1px 1px 2px var(--shadow-color);
+  }
+  
+  #restart-btn {
+    background-color: #495057;
+    padding: 12px 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  #restart-btn.x-win {
+    background-color: var(--x-color);
+  }
+  
+  #restart-btn.o-win {
+    background-color: var(--o-color);
   }
   
   /* Win animation */
@@ -322,7 +405,7 @@
   
   .draw-animation {
     animation: draw-glow 1s;
-  }
+  }  /* Developed by https://www.linkedin.com/in/msubham/ */
   
   @keyframes draw-glow {
     0% { box-shadow: 0 0 5px 0px var(--x-color), 0 0 5px 0px var(--o-color); }
@@ -330,48 +413,44 @@
     100% { box-shadow: 0 0 5px 0px var(--x-color), 0 0 5px 0px var(--o-color); }
   }
   
-  /* Theme toggle styles */
-  .checkbox {
-    opacity: 0;
-    position: absolute;
+  /* Footer Styles */
+  .footer {
+    background-color: var(--nav-bg);
+    color: var(--nav-text);
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 -4px 12px var(--shadow-color);
   }
   
-  .checkbox-label {
-    background-color: #111;
-    width: 50px;
-    height: 26px;
-    border-radius: 50px;
-    position: relative;
-    padding: 5px;
-    cursor: pointer;
+  .footer-content {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    gap: 10px;
   }
   
-  .fa-moon {
-    color: #f1c40f;
+  .github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
   }
   
-  .fa-sun {
-    color: #f39c12;
+  .github-btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
   }
   
-  .checkbox-label .ball {
-    background-color: #fff;
-    width: 22px;
-    height: 22px;
-    position: absolute;
-    left: 2px;
-    top: 2px;
-    border-radius: 50%;
-    transition: transform 0.2s linear;
+  .copyright {
+    font-size: 0.8rem;
+    opacity: 0.8;
   }
-  
-  .checkbox:checked + .checkbox-label .ball {
-    transform: translateX(24px);
-  }
-  
+    /* Developed by https://www.linkedin.com/in/msubham/ */
   /* Mobile optimization */
   @media (max-width: 600px) {
     .navbar {
@@ -386,6 +465,22 @@
     .nav-right {
       width: 100%;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .theme-switch__label {
+      width: 45px;
+      height: 24px;
+    }
+    
+    .theme-switch__label::after {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .theme-switch__input:checked + .theme-switch__label::after {
+      transform: translateX(19px);
     }
     
     .board {
@@ -400,10 +495,6 @@
     
     .board-container {
       width: 252px;
-    }
-    
-    .line {
-      width: 240px;
     }
     
     .scoreboard {
