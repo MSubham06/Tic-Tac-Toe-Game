@@ -1,11 +1,20 @@
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
 const winningLine = document.getElementById("winning-line");
-const xScoreDisplay = document.querySelector(".x-score");
-const oScoreDisplay = document.querySelector(".o-score");
+const xNameDisplay = document.getElementById("x-name");
+const oNameDisplay = document.getElementById("o-name");
+const xScoreDisplay = document.querySelector(".x-score .score-count");
+const oScoreDisplay = document.querySelector(".o-score .score-count");
 const soundBtn = document.getElementById("sound-btn");
 const aiBtn = document.getElementById("ai-btn");
 const themeToggle = document.getElementById("checkbox");
+const playerInput = document.getElementById("player-input");
+const gameArea = document.getElementById("game-area");
+const startBtn = document.getElementById("start-game");
+const turnIndicator = document.getElementById("turn-indicator");
+const currentTurnDisplay = document.getElementById("current-turn");
+const boardContainer = document.getElementById("board-container");
+const boardBorder = document.querySelector(".board-border");
 
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
@@ -17,6 +26,8 @@ let gameActive = true;
 let scores = { X: 0, O: 0 };
 let soundOn = true;
 let aiMode = false;
+let playerNames = { X: "Player X", O: "Player O" };
+let firstPlayer = "X";
 
 const winConditions = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -37,11 +48,17 @@ const lineTransforms = {
 
 // Initialize the game
 function init() {
-  updateScores();
-  cells.forEach(cell => cell.addEventListener("click", handleClick));
   themeToggle.addEventListener("change", toggleTheme);
   soundBtn.addEventListener("click", toggleSound);
   aiBtn.addEventListener("click", toggleAI);
+  startBtn.addEventListener("click", startGame);
+  
+  // Set initial theme based on checkbox state
+  if (themeToggle.checked) {
+    document.body.classList.add("dark-mode");
+  }
+  
+  updateTurnIndicator();
 }
 
 function toggleTheme() {
@@ -61,6 +78,24 @@ function toggleAI() {
   restartGame();
 }
 
+function startGame() {
+  const playerX = document.getElementById("player-x").value.trim() || "Player X";
+  const playerO = document.getElementById("player-o").value.trim() || "Player O";
+  
+  playerNames.X = playerX;
+  playerNames.O = playerO;
+  
+  xNameDisplay.textContent = playerX;
+  oNameDisplay.textContent = playerO;
+  
+  playerInput.style.display = "none";
+  gameArea.style.display = "block";
+  
+  cells.forEach(cell => cell.addEventListener("click", handleClick));
+  
+  updateTurnIndicator();
+}
+
 function playSound(sound) {
   if (soundOn) {
     sound.currentTime = 0;
@@ -69,8 +104,24 @@ function playSound(sound) {
 }
 
 function updateScores() {
-  xScoreDisplay.textContent = `X: ${scores.X}`;
-  oScoreDisplay.textContent = `O: ${scores.O}`;
+  xScoreDisplay.textContent = scores.X;
+  oScoreDisplay.textContent = scores.O;
+}
+
+function updateTurnIndicator() {
+  boardBorder.classList.remove("x-turn", "o-turn");
+  
+  if (gameActive) {
+    if (currentPlayer === "X") {
+      currentTurnDisplay.textContent = `${playerNames.X}'s turn`;
+      currentTurnDisplay.style.color = "var(--x-color)";
+      boardBorder.classList.add("x-turn");
+    } else {
+      currentTurnDisplay.textContent = `${playerNames.O}'s turn`;
+      currentTurnDisplay.style.color = "var(--o-color)";
+      boardBorder.classList.add("o-turn");
+    }
+  }
 }
 
 function drawLine(condition) {
@@ -95,11 +146,21 @@ function handleClick() {
   this.classList.add(currentPlayer === "X" ? "x-move" : "o-move");
 
   if (checkWin()) {
-    statusText.textContent = `Player ${currentPlayer} wins!`;
+    const winnerName = currentPlayer === "X" ? playerNames.X : playerNames.O;
+    statusText.textContent = `${winnerName} wins!`;
     scores[currentPlayer]++;
     updateScores();
     gameActive = false;
     playSound(winSound);
+    
+    // Add win animation to board
+    boardContainer.classList.add(currentPlayer === "X" ? "win-animation" : "win-animation");
+    setTimeout(() => {
+      boardContainer.classList.remove("win-animation");
+    }, 400);
+    
+    // Alternate first player for next game
+    firstPlayer = firstPlayer === "X" ? "O" : "X";
     return;
   }
 
@@ -107,10 +168,20 @@ function handleClick() {
     statusText.textContent = "It's a draw!";
     gameActive = false;
     playSound(drawSound);
+    
+    // Add draw animation to board
+    boardContainer.classList.add("draw-animation");
+    setTimeout(() => {
+      boardContainer.classList.remove("draw-animation");
+    }, 1000);
+    
+    // Alternate first player for next game
+    firstPlayer = firstPlayer === "X" ? "O" : "X";
     return;
   }
 
   currentPlayer = currentPlayer === "X" ? "O" : "X";
+  updateTurnIndicator();
   
   if (aiMode && currentPlayer === "O") {
     setTimeout(makeAIMove, 500);
@@ -130,11 +201,20 @@ function makeAIMove() {
     playSound(clickSound);
     
     if (checkWin()) {
-      statusText.textContent = "Player O wins!";
+      statusText.textContent = `${playerNames.O} wins!`;
       scores.O++;
       updateScores();
       gameActive = false;
       playSound(winSound);
+      
+      // Add win animation to board
+      boardContainer.classList.add("win-animation");
+      setTimeout(() => {
+        boardContainer.classList.remove("win-animation");
+      }, 400);
+      
+      // Alternate first player for next game
+      firstPlayer = firstPlayer === "X" ? "O" : "X";
       return;
     }
     
@@ -142,10 +222,20 @@ function makeAIMove() {
       statusText.textContent = "It's a draw!";
       gameActive = false;
       playSound(drawSound);
+      
+      // Add draw animation to board
+      boardContainer.classList.add("draw-animation");
+      setTimeout(() => {
+        boardContainer.classList.remove("draw-animation");
+      }, 1000);
+      
+      // Alternate first player for next game
+      firstPlayer = firstPlayer === "X" ? "O" : "X";
       return;
     }
     
     currentPlayer = "X";
+    updateTurnIndicator();
   }
 }
 
@@ -163,13 +253,16 @@ function checkWin() {
 function restartGame() {
   board = ["", "", "", "", "", "", "", "", ""];
   gameActive = true;
-  currentPlayer = "X";
+  currentPlayer = firstPlayer;
   cells.forEach(cell => {
     cell.textContent = "";
     cell.classList.remove("x-move", "o-move");
   });
   statusText.textContent = "";
   winningLine.style.display = "none";
+  boardBorder.classList.remove("x-turn", "o-turn");
+  
+  updateTurnIndicator();
   
   if (aiMode && currentPlayer === "O") {
     setTimeout(makeAIMove, 500);
