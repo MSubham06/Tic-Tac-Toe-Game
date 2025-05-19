@@ -63,6 +63,23 @@ An interactive, fully responsive **Tic Tac Toe** game built using HTML, CSS, and
 
 ## 📸 Screenshots
 
-<img src="./assets/screenshot.png" alt="Game Screenshot" width="500"/>
+# XO Tic Tac Toe : Landing page
+Here we can enter players name and start the game.
+  
+<img src="GSS1.png" alt="Game Screenshot" width="500"/>
+
+# XO Board :
+  Here we can start playing with friend or Top right corner have PLAY WITH AI option too.
+
+  <img src="GSS2.png" alt="Game Screenshot" width="500"/>
+
+
+# XO Board : SS from mid game
+  Changing colors around board tells us who's turn it is.
+
+  <img src="GSS3.png" alt="Game Screenshot" width="500"/>
+
+
+
 
 Made with ❤️ by Subham
