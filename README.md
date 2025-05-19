@@ -2,6 +2,11 @@
 
 An interactive, fully responsive **Tic Tac Toe** game built using HTML, CSS, and JavaScript. Designed with a clean black, gray, and white aesthetic, it offers features like AI mode, dark/light mode toggle, sound control, and a live scoreboard.
 
+## The game is ON! What are you waiting for??
+
+[![Play Now](https://img.shields.io/badge/Play_Now-brightgreen?style=for-the-badge&logo=gamepad)](https://msubham06.github.io/Tic-Tac-Toe-Game/)
+
+
 ---
 
 ## 🚀 Features
